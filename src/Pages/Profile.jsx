@@ -1,91 +1,177 @@
-import React from 'react'
-import {Link} from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faPenToSquare, faMars, faGraduationCap, faBurger } from '@fortawesome/free-solid-svg-icons';
-import { faSpinner, faCartShopping, faBell, faGlobe, faCircleInfo, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faGift,
+  faCartShopping,
+  faBell,
+  faCircleInfo,
+  faNewspaper,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
-function Profile() {
-  return (
-    <div className="w-full h-screen bg-[#FAF5FF] p-5">
-       
-        {/* User */}
-        <div className='p-10 flex justify-between'>
-            <div className='mx-12 flex gap-5 '>
-            <img className='h-20 rounded-full my-auto block border-2' src="https://i.pinimg.com/236x/6d/0e/05/6d0e052a59840858186a37ba74de24b3.jpg" alt="Profile" />
-            <div className='my-auto block'>
-                <h1 className='font-bold text-[#000000] text-2xl '>Furqan Ansari</h1>
-                <h5 className='text-[#5B5B5E]'>Developer</h5>
-            </div>
-            <div className='my-auto block'>
-            <Link to="/edit-profile"><FontAwesomeIcon icon={faPenToSquare} className='text-[#AAB9C5] hover:text-sky-900'/></Link>
-            </div>
-            </div>
-
-            <div className='px-24'>
-                <h1 className='text-[#AAB9C5]'>My status</h1>
-                <div className='mt-4 flex gap-12'>
-                    <div className='bg-[#0C0C0C] text-[#FFFFFF] hover:scale-95 py-2 px-10 rounded-3xl shadow-lg'><FontAwesomeIcon icon={faMars} style={{color:"#FFF"}} /> Male</div>
-                    <div className='bg-[#EFDAC1] text-[#0C0C0C] hover:scale-95 py-2 px-10 rounded-3xl shadow-lg'><FontAwesomeIcon icon={faGraduationCap} /> Student</div>
-                    <div className='bg-[#47FF9B] text-[#404040] hover:scale-95 py-2 px-10 rounded-3xl shadow-lg'><FontAwesomeIcon icon={faBurger} />  Foodie</div>
-                </div>
-            </div>
-        </div>
-
-        {/* Menu */}
-        <div className='px-14 mt-10'>
-        <Link to='/RecentOrder'><div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer	rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-            <div className='flex gap-5 '>
-                <FontAwesomeIcon icon={faSpinner} className='py-2 pl-5'/><h1 className='my-auto block'>Recent Order</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>
-        </div>
+const Profile = () => {
+  // User Info Section
+  const userInfo = (
+    <div className="flex rounded-xl mb-4 gap-4 items-center">
+      <img
+        className="h-16 w-16 rounded-full"
+        src="https://i.pinimg.com/736x/67/8a/5d/678a5db920a7faa44193f409e0e82a79.jpg"
+        alt="Profile"
+      />
+      <div>
+        <h1 className="text-lg font-extrabold text-[#333]">Furqan Ansari</h1>
+        <h5 className="text-gray-600 text-sm">22bit16@aiktc.ac.in</h5>
+        <Link
+          to="/editprofile"
+          className="text-blue-500 text-sm py-1 rounded-lg mt-1  flex items-center gap-2"
+        >
+          Edit Profile
+          <FontAwesomeIcon icon={faChevronRight} />
         </Link>
-        
-        <Link to='/Cart'><div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer	rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-        <div className='flex gap-5 '>
-            <FontAwesomeIcon icon={faCartShopping} className='py-2 pl-5'/> <h1 className='my-auto block'>My Cart</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>
-        </div>
-        </Link>
-
-        <Link to='/Notification'><div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer	rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-        <div className='flex gap-5 '>
-            <FontAwesomeIcon icon={faBell} className='py-2 pl-5'/><h1 className='my-auto block'>Notification</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>  
-        </div>
-        </Link>
-
-        <div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-        <div className='flex gap-5 '>
-            <FontAwesomeIcon icon={faGlobe} className='py-2 pl-5' /><h1 className='my-auto block'>Language - English</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>
-        </div>
-
-        <div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer	rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-        <div className='flex gap-5 '>
-            <FontAwesomeIcon icon={faCircleInfo} className='py-2 pl-5'/><h1 className='my-auto block'>Help & FAQs</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>
-        </div>
-
-        <div className='bg-[#FFFFFF] p-1 my-1 border cursor-pointer	rounded-xl flex justify-between shadow-lg hover:bg-[#DADADA] hover:border-2'>
-        <div className='flex gap-5 '>
-            <FontAwesomeIcon icon={faNewspaper} className='py-2 pl-5'/><h1 className='my-auto block'>Terms & Condition</h1>
-            </div>
-            <FontAwesomeIcon icon={faChevronRight} className='p-2'/>
-        </div>
-        </div>
-
-        {/* Account Detail */}
-        <div className='text-[#AAB9C5] flex justify-between py-10 px-10 text-bottom'>
-            <h1>My Account</h1>
-            <p>Created Date: 07-09-2024</p>
-        </div>
+      </div>
     </div>
-  )
-}
+  );
+
+  // Menu Options
+  const menuItems = [
+    {
+      label: "Your Orders",
+      description: "Check your order history and status",
+      icon: faCartShopping,
+      route: "/orderhistory",
+    },
+    {
+      label: "Terms & Conditions",
+      description: "Understand our terms and conditions",
+      icon: faNewspaper,
+      route: "/term",
+    },
+    {
+      label: "Privacy Policy",
+      description: "Learn about how we protect your data",
+      icon: faCircleInfo,
+      route: "/policy",
+    },
+    {
+      label: "About",
+      description: "Learn more about our platform",
+      icon: faCircleInfo,
+      route: "/about",
+    },
+    {
+      label: "FAQs",
+      description: "Find answers to common questions",
+      icon: faCircleInfo,
+      route: "/faq",
+    },
+  ];
+
+  const menuList = menuItems.map((item, index) => (
+    <Link to={item.route} key={index}>
+      <div className="flex justify-between items-start py-4">
+        <div className="flex items-start gap-4">
+          <FontAwesomeIcon icon={item.icon} className="text-[#777] mt-1" />
+          <div>
+            <h1 className="text-[#333] font-medium">{item.label}</h1>
+            <p className="text-sm text-gray-500">{item.description}</p>
+          </div>
+        </div>
+      </div>
+      {index < menuItems.length - 1 && <hr className="border-gray-300" />}
+    </Link>
+  ));
+
+  // Referral Option
+  const referralOption = (
+    <div className="py-4">
+      <div className="flex items-start gap-4 cursor-pointer">
+        <FontAwesomeIcon icon={faGift} className="text-green-500 mt-1" />
+        <div>
+          <h1 className="text-[#333] font-medium">Refer & Earn</h1>
+          <p className="text-sm text-gray-500">
+            Invite your friends to explore our website and unlock great experiences together!
+          </p>
+        </div>
+      </div>
+      <hr className="border-gray-300 mt-4" />
+    </div>
+  );
+
+  // Handle Referral Share (WhatsApp)
+  const handleReferralShare = () => {
+    const message =
+      "Discover amazing features on our platform! 🌟\n\nJoin now and see it for yourself: [https://yourwebsite.com] 🚀";
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  };
+
+  // Handle Help Email
+  const handleHelpEmail = () => {
+    const email = "help@yourwebsite.com";
+    const subject = "Help Request";
+    const body = "I am facing some issues with the platform. Please assist.";
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-[#FAF5FF] lg:px-60 p-5 relative">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center mb-4">
+        <a href="home"><FontAwesomeIcon
+          icon={faChevronLeft}
+          className="text-gray-700 cursor-pointer"
+        /></a>
+        <button
+          onClick={handleHelpEmail}
+          className="p-2 top-5 right-5 bg-[#715a1ebc] text-white font-extrabold text-sm py-2 px-4 rounded-2xl transition-all"
+        >
+          Help
+        </button>
+      </div>
+
+      {/* User Info Section */}
+      {userInfo}
+
+      {/* Line Separator */}
+      <hr className="border-gray-300 mb-4" />
+
+      {/* Menu Section */}
+      <div className="bg-[#FAF5FF] rounded-xl py-4">
+        <h1 className="text-[#AAB9C5] text-lg font-medium mb-4">Menu</h1>
+        {menuList}
+      </div>
+
+      {/* Referral Section */}
+      <div onClick={handleReferralShare}>{referralOption}</div>
+
+      {/* Logout Option */}
+      <div className="py-4">
+        <Link to="/" className="flex items-start gap-4">
+          <FontAwesomeIcon
+            icon={faRightFromBracket}
+            className="text-red-500 mt-1"
+          />
+          <div>
+            <h1 className="text-[#333] font-medium">Log Out</h1>
+          </div>
+        </Link>
+      </div>
+
+      {/* Bottom Fixed Popup */}
+      <div className="fixed bottom-4 left-0 w-full flex justify-center">
+        <a href="home"><button className="bg-blue-500 text-white py-2 px-6 rounded-full shadow-lg hover:bg-blue-600">
+          Browse Items
+        </button></a>
+      </div>
+    </div>
+  );
+};
 
 export default Profile;

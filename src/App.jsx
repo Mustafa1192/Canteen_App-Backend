@@ -1,28 +1,42 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Welcome from "./Auth/Welcome";
+import LoadingAnimation from "./Auth/LoadingAnimation";
+import AppAuth from "./Auth/AppAuth";
 import Register from "./Auth/Register";
 import Login from "./Auth/Login";
 import Verification from "./Auth/Verification";
 import Notification from "./Auth/Notification";
 import Forget from "./Auth/Forget";
+import Term from "./Auth/TermCondition";
+import Policy from "./Auth/PrivacyPolicy";
 
 import Home from "./Pages/Home";
+import GeneralFood from "./Pages/HumanCaterers";
+import Frankies from "./Pages/FrankiesStall";
+import Drinks from "./Pages/FreashTJuice";
+import SouthIndian from "./Pages/SSDosaCenter";
 import Profile from "./Pages/Profile";
-import Cart from "./Pages/Cart";
-import NotFound from "./component/Notfound";
-import Order from "./Pages/Order";
+
+import Cart from "./Logic/Cart";
+import Order from "./Logic/Order";
+import OrderHistory from "./Logic/OrderHistory";
+
+import AdminPanel from "./dashboard/pages/Dashboard";
+import ProductList from "./dashboard/pages/ProductList";
 
 import AuthLayout from "./Layouts/AuthLayout";
 import MainLayout from "./Layouts/MainLayout";
-import MobileLayout from "./Layouts/MobileLayout";
-import OrderHistory from "./Pages/OrderHistory";
-// import AdminPanel from "../Dashboard/src/pages/Dashboard";
+
+import NotFound from "./component/Notfound";
+import SearchProduct from "./component/SearchProduct";
+import About from "./component/About";
+import FAQ from "./component/FAQs";
 
 export default function App() {
   // Cart state to store added items
   const [cart, setCart] = useState([]);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   // Function to add an item to the cart
   const addToCart = (item) => {
@@ -59,37 +73,61 @@ export default function App() {
       <Routes>
         {/* Auth Pages (No Navbar/Footer) */}
         <Route element={<AuthLayout />}>
-          <Route path="/" element={<Welcome />} />
+          {showWelcome ? (
+            <Route
+              path="/"
+              element={
+                <div className="block md:hidden">
+                  <LoadingAnimation onFinish={() => setShowWelcome(false)} />
+                </div>
+              }
+            />
+          ) : (
+            <Route path="/" element={<AppAuth />} />
+          )}
           <Route path="/login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Verification" element={<Verification />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verification" element={<Verification />} />
           <Route path="/notification" element={<Notification />} />
-          <Route path="/Forget" element={<Forget />} />
+          <Route path="/forget" element={<Forget />} />
 
-        </Route>
-
-        {/* Main Pages (With Navbar/Footer) */}
-        <Route element={<MainLayout />}>
-        <Route path="/Home" element={<Home />} /> 
-        </Route>
-
-        {/* Main Pages (With Navbar) */}
-        <Route element={<MobileLayout />}>
-          <Route path="/Home" element={<Home />} />         
+          {/* OneMenu Pages */}
           <Route path="/orders" element={<Order />} />
           <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart 
-                  cart={cart}
-                  deleteFromCart={deleteFromCart}
-                  updateQuantity={updateQuantity}/>}/>
+          <Route path="/term" element={<Term />} />
+          <Route path="/policy" element={<Policy />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route
+            path="/cart"
+            element={
+              <Cart
+                cart={cart}
+                deleteFromCart={deleteFromCart}
+                updateQuantity={updateQuantity}
+              />
+            }
+          />
 
-                  {/* dashboard */}
-          {/* <Route path="/dashboard" element={<AdminPanel />} /> */}
+          {/* Dashboard */}
+          <Route path="/dashboard" element={<AdminPanel />} />
+          <Route path="/add-product" element={<ProductList />} />
+          <Route path="/admin" element={<Home />} />
         </Route>
 
-        {/* 404 Not Found */}
-        <Route path="*" element={<NotFound />} />
+        {/* Main Pages (With BottomNav) */}
+        <Route element={<MainLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/huma" element={<GeneralFood />} />
+          <Route path="/frankies" element={<Frankies />} />
+          <Route path="/drinks" element={<Drinks />} />
+          <Route path="/southindian" element={<SouthIndian />} />
+          <Route path="/search/:searchTerm" element={<SearchProduct />} />
+
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

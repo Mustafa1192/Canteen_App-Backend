@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import Navbar from "../component/Navbar";
-import Footer from "../component/Footer";
 import { Outlet } from "react-router-dom";
+import BottomNav from "../component/BottomNav";
+import Header from "../component/Header";
+
 
 export default function MainLayout() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div>
-      <Navbar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
+    <div className="lg:px-60">
+      <Header />
       <Outlet />
-      <Footer />
+      <BottomNav />
     </div>
   );
 }

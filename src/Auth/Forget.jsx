@@ -93,7 +93,7 @@ function ForgetPassword() {
                 });
                 setMessageType('success');
                 setMessage(response.data.message);
-                setTimeout(() => navigate('/Home'), 3000); // Redirect after 3 seconds
+                setTimeout(() => navigate('/login'), 1000); // Redirect after 3 seconds
             } catch (error) {
                 setMessageType('error');
                 setMessage(error.response.data.message);

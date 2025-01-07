@@ -279,39 +279,15 @@
 
 
 
+////////////////////////////////////////////////Just a structure 
+// import React, { useState } from 'react';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// function LoginWithOTP() {
-//     const [formData, setFormData] = useState({ email: '', otp: '' });
+// function LoginOrRegisterWithOTP() {
+//     const [formData, setFormData] = useState({ email: '', otp: '', username: '', password: '' });
 //     const [message, setMessage] = useState('');
 //     const [messageType, setMessageType] = useState('');
 //     const [step, setStep] = useState(1);
-//     const [resendTimer, setResendTimer] = useState(60);
-//     const [canResend, setCanResend] = useState(false);
-
-//     useEffect(() => {
-//         if (resendTimer > 0) {
-//             const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
-//             return () => clearTimeout(timer);
-//         } else {
-//             setCanResend(true);
-//         }
-//     }, [resendTimer]);
+//     const [isRegistered, setIsRegistered] = useState(false); // Whether user exists or not
 
 //     const handleChange = (e) => {
 //         const { name, value } = e.target;
@@ -323,53 +299,48 @@
 //         return emailRegex.test(email);
 //     };
 
-//     const handleResend = async () => {
-//         try {
-//             const res = await axios.post('http://localhost:5000/resend-otp', { email: formData.email });
-//             setMessageType('success');
-//             setMessage(res.data.message);
-//             setResendTimer(60);
-//             setCanResend(false);
-//         } catch (error) {
-//             setMessageType('error');
-//             setMessage(error.response.data.message || 'Error resending OTP!');
-//         }
-//     };
-
-//     const handleSubmit = async (e) => {
+//     const handleSubmit = (e) => {
 //         e.preventDefault();
+
 //         if (step === 1) {
+//             // Step 1: Check if email is valid and send OTP
 //             if (!validateEmail(formData.email)) {
 //                 setMessageType('error');
 //                 setMessage('Please use an email ending with @aiktc.ac.in.');
 //                 return;
 //             }
-//             try {
-//                 const res = await axios.post('http://localhost:5000/send-otp', {
-//                     email: formData.email,
-//                 });
+
+//             // Simulated behavior: Check if user exists in database
+//             const userExists = Math.random() > 0.5; // Random true/false to simulate backend check
+
+//             if (userExists) {
+//                 setIsRegistered(true);
 //                 setMessageType('success');
-//                 setMessage(res.data.message);
+//                 setMessage('User found! OTP sent to your email.');
 //                 setStep(2);
-//                 setResendTimer(60);
-//                 setCanResend(false);
-//             } catch (error) {
+//             } else {
+//                 setIsRegistered(false);
 //                 setMessageType('error');
-//                 setMessage(error.response.data.message || 'Error sending OTP!');
+//                 setMessage('User not found. Redirecting to registration...');
+//                 setTimeout(() => setStep(3), 1000); // Go to registration form
 //             }
 //         } else if (step === 2) {
-//             try {
-//                 const res = await axios.post('http://localhost:5000/verify-otp', {
-//                     email: formData.email,
-//                     otp: formData.otp,
-//                 });
+//             // Step 2: Verify OTP
+//             if (formData.otp === '1234') { // Hardcoded OTP for demo
 //                 setMessageType('success');
-//                 setMessage(res.data.message || 'OTP verified successfully!');
-//                 setStep(1); // Reset step for next login
-//                 setFormData({ email: '', otp: '' }); // Reset form data
-//             } catch (error) {
+//                 setMessage('OTP verified! Logging in...');
+//             } else {
 //                 setMessageType('error');
-//                 setMessage(error.response.data.message || 'Invalid OTP!');
+//                 setMessage('Invalid OTP!');
+//             }
+//         } else if (step === 3) {
+//             // Step 3: Register new user
+//             if (formData.username && formData.password && formData.otp === '1234') {
+//                 setMessageType('success');
+//                 setMessage('Registration successful!');
+//             } else {
+//                 setMessageType('error');
+//                 setMessage('Please fill all fields correctly!');
 //             }
 //         }
 //     };
@@ -377,9 +348,9 @@
 //     return (
 //         <div className="w-full h-screen bg-[#FAF5FF] p-5">
 //             <div className="pt-16">
-//                 <h1 className="text-center text-3xl font-bold text-[#534E55]">Login with OTP</h1>
+//                 <h1 className="text-center text-3xl font-bold text-[#534E55]">Login or Register</h1>
 //                 <p className="text-center text-2xl text-[#808080] mt-4">
-//                     Access your account securely with OTP
+//                     {step === 3 ? 'Register to create an account' : 'Access your account securely with OTP'}
 //                 </p>
 //             </div>
 
@@ -398,7 +369,7 @@
 //                             <p className="text-gray-500 mt-2">You will receive an OTP if you are registered.</p>
 //                         </>
 //                     )}
-//                     {step === 2 && (
+//                     {step === 2 && isRegistered && (
 //                         <>
 //                             <input
 //                                 className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
@@ -408,17 +379,41 @@
 //                                 value={formData.otp}
 //                                 onChange={handleChange}
 //                             />
-//                             {canResend ? (
-//                                 <button
-//                                     className="text-blue-500 underline mt-2"
-//                                     type="button"
-//                                     onClick={handleResend}
-//                                 >
-//                                     Resend OTP
-//                                 </button>
-//                             ) : (
-//                                 <p className="text-gray-500 mt-2">Resend OTP in {resendTimer}s</p>
-//                             )}
+//                         </>
+//                     )}
+//                     {step === 3 && !isRegistered && (
+//                         <>
+//                             <input
+//                                 className="p-5 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                 type="email"
+//                                 name="email"
+//                                 value={formData.email}
+//                                 readOnly
+//                             />
+//                             <input
+//                                 className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                 placeholder="Enter OTP"
+//                                 type="text"
+//                                 name="otp"
+//                                 value={formData.otp}
+//                                 onChange={handleChange}
+//                             />
+//                             <input
+//                                 className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                 placeholder="Enter Username"
+//                                 type="text"
+//                                 name="username"
+//                                 value={formData.username}
+//                                 onChange={handleChange}
+//                             />
+//                             <input
+//                                 className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                 placeholder="Enter Password"
+//                                 type="password"
+//                                 name="password"
+//                                 value={formData.password}
+//                                 onChange={handleChange}
+//                             />
 //                         </>
 //                     )}
 //                     {message && (
@@ -435,7 +430,7 @@
 //                         type="submit"
 //                     >
 //                         <h1 className="text-center text-white font-medium text-lg">
-//                             {step === 1 ? 'Send OTP' : 'Verify OTP'}
+//                             {step === 1 ? 'Next' : step === 2 ? 'Verify OTP' : 'Register'}
 //                         </h1>
 //                     </button>
 //                 </form>
@@ -444,21 +439,26 @@
 //     );
 // }
 
-// export default LoginWithOTP;
+// export default LoginOrRegisterWithOTP;
 
 
+
+
+
+////////////////////////////////////////////////////////////////////////Working With Latest Reqiurements 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function LoginWithOTP() {
-    const [formData, setFormData] = useState({ email: '', otp: '' });
+    const [formData, setFormData] = useState({ email: '', otp: '', username: '', password: '' });
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(1); // 1: Request OTP, 2: Verify OTP/Register
+    const [isNewUser, setIsNewUser] = useState(false);
     const [resendTimer, setResendTimer] = useState(60);
     const [canResend, setCanResend] = useState(false);
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (resendTimer > 0) {
@@ -474,11 +474,6 @@ function LoginWithOTP() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const validateEmail = (email) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@aiktc\.ac\.in$/;
-        return emailRegex.test(email);
-    };
-
     const handleResend = async () => {
         try {
             const res = await axios.post('http://localhost:5000/resend-otp', { email: formData.email });
@@ -488,49 +483,59 @@ function LoginWithOTP() {
             setCanResend(false);
         } catch (error) {
             setMessageType('error');
-            setMessage(error.response.data.message || 'Error resending OTP!');
+            setMessage(error.response?.data.message || 'Error resending OTP.');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (step === 1) {
-            if (!validateEmail(formData.email)) {
-                setMessageType('error');
-                setMessage('Please use an email ending with @aiktc.ac.in.');
-                return;
-            }
             try {
-                const res = await axios.post('http://localhost:5000/send-otp', {
-                    email: formData.email,
-                });
+                const res = await axios.post('http://localhost:5000/send-otp', { email: formData.email });
                 setMessageType('success');
                 setMessage(res.data.message);
+                setIsNewUser(false);
                 setStep(2);
                 setResendTimer(60);
                 setCanResend(false);
             } catch (error) {
-                setMessageType('error');
-                setMessage(error.response.data.message || 'Error sending OTP!');
+                if (error.response?.status === 404) {
+                    setIsNewUser(true);
+                    setStep(2);
+                } else {
+                    setMessageType('error');
+                    setMessage(error.response?.data.message || 'Error sending OTP.');
+                }
             }
         } else if (step === 2) {
-            try {
-                const res = await axios.post('http://localhost:5000/verify-otp', {
-                    email: formData.email,
-                    otp: formData.otp,
-                });
-                setMessageType('success');
-                setMessage(res.data.message || 'OTP verified successfully!');
-                
-                // Navigate to the home page on successful OTP verification
-                navigate('/home'); // Redirects to the home page after successful OTP verification
-                
-                // Reset form data for the next login
-                setStep(1); 
-                setFormData({ email: '', otp: '' });
-            } catch (error) {
-                setMessageType('error');
-                setMessage(error.response.data.message || 'Invalid OTP!');
+            if (isNewUser) {
+                try {
+                    const res = await axios.post('http://localhost:5000/register', {
+                        email: formData.email,
+                        username: formData.username,
+                        password: formData.password,
+                        otp: formData.otp,
+                    });
+                    setMessageType('success');
+                    setMessage(res.data.message);
+                    navigate('/home');
+                } catch (error) {
+                    setMessageType('error');
+                    setMessage(error.response?.data.message || 'Registration failed.');
+                }
+            } else {
+                try {
+                    const res = await axios.post('http://localhost:5000/verify-otp', {
+                        email: formData.email,
+                        otp: formData.otp,
+                    });
+                    setMessageType('success');
+                    setMessage(res.data.message);
+                    navigate('/home');
+                } catch (error) {
+                    setMessageType('error');
+                    setMessage(error.response?.data.message || 'Invalid OTP.');
+                }
             }
         }
     };
@@ -538,26 +543,29 @@ function LoginWithOTP() {
     return (
         <div className="w-full h-screen bg-[#FAF5FF] p-5">
             <div className="pt-16">
-                <h1 className="text-center text-3xl font-bold text-[#534E55]">Login with OTP</h1>
+                <h1 className="text-center text-3xl font-bold text-[#534E55]">
+                    {step === 1 ? 'Login with OTP' : isNewUser ? 'Register' : 'Verify OTP'}
+                </h1>
                 <p className="text-center text-2xl text-[#808080] mt-4">
-                    Access your account securely with OTP
+                    {step === 1
+                        ? 'Access your account securely with OTP'
+                        : isNewUser
+                        ? 'Register to create an account'
+                        : 'Enter OTP to verify'}
                 </p>
             </div>
-
             <div className="flex justify-center items-center">
                 <form className="mt-12 text-center w-full sm:w-96" onSubmit={handleSubmit}>
                     {step === 1 && (
-                        <>
-                            <input
-                                className="p-5 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
-                                placeholder="Enter your AIKTC email"
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                            <p className="text-gray-500 mt-2">You will receive an OTP if you are registered.</p>
-                        </>
+                        <input
+                            className="p-5 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+                            placeholder="Enter your email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
                     )}
                     {step === 2 && (
                         <>
@@ -568,17 +576,29 @@ function LoginWithOTP() {
                                 name="otp"
                                 value={formData.otp}
                                 onChange={handleChange}
+                                required
                             />
-                            {canResend ? (
-                                <button
-                                    className="text-blue-500 underline mt-2"
-                                    type="button"
-                                    onClick={handleResend}
-                                >
-                                    Resend OTP
-                                </button>
-                            ) : (
-                                <p className="text-gray-500 mt-2">Resend OTP in {resendTimer}s</p>
+                            {isNewUser && (
+                                <>
+                                    <input
+                                        className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+                                        placeholder="Enter Username"
+                                        type="text"
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <input
+                                        className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+                                        placeholder="Enter Password"
+                                        type="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </>
                             )}
                         </>
                     )}
@@ -596,16 +616,37 @@ function LoginWithOTP() {
                         type="submit"
                     >
                         <h1 className="text-center text-white font-medium text-lg">
-                            {step === 1 ? 'Send OTP' : 'Verify OTP'}
+                            {step === 1
+                                ? 'Send OTP'
+                                : isNewUser
+                                ? 'Register'
+                                : 'Verify OTP'}
                         </h1>
                     </button>
                 </form>
             </div>
+            {step === 2 && (
+                <div className="mt-4 text-center">
+                    <button
+                        className="text-[#FE724C] underline"
+                        onClick={handleResend}
+                        disabled={!canResend}
+                    >
+                        Resend OTP {canResend ? '' : `(${resendTimer}s)`}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
 
 export default LoginWithOTP;
+
+
+
+
+
+
 
 
 
