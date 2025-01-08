@@ -252,6 +252,7 @@
 //     res.status(500).json({ message: 'Server error' });
 //   }
 // });
+////////////////////////////////////////////////////////////Without entering password
 // // app.post('/api/check-user', async (req, res) => {
 // //   const { email } = req.body;
 
@@ -387,8 +388,12 @@ const crypto = require('crypto'); // To generate OTP
 const bcrypt = require('bcrypt'); // To hash passwords
 
 const app = express();
-const PORT = 5000;
-
+// const PORT = 5000;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+    
 // MongoDB Connection URI
 const MONGODB_URI = 'mongodb+srv://mustafakhan31499:cNG8NPtbhNaY5ieh@cluster1.cye9d.mongodb.net/Canteen_app?retryWrites=true&w=majority&appName=Cluster1';
 
