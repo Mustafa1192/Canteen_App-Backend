@@ -642,6 +642,7 @@
 
 // export default LoginWithOTP;
 
+// For Deployment
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -681,7 +682,7 @@ function LoginWithOTP() {
 
     const handleResend = async () => {
         try {
-            const res = await axios.post('/resend-otp', { email: formData.email });
+            const res = await axios.post('/api/resend-otp', { email: formData.email });
             setMessageType('success');
             setMessage(res.data.message);
             setResendTimer(60);
@@ -703,27 +704,32 @@ function LoginWithOTP() {
             }
 
             try {
-                const res = await axios.post('/send-otp', { email: formData.email });
+                const res = await axios.post('/api/send-otp', { email: formData.email });
                 setMessageType('success');
                 setMessage(res.data.message);
-                setIsNewUser(res.data.isNewUser);
+                setIsNewUser(res.data.isNewUser); // Set new user status
                 setStep(2);
                 setResendTimer(60);
                 setCanResend(false);
             } catch (error) {
-                setMessageType('error');
-                setMessage(error.response?.data.message || 'Error sending OTP.');
+                if (error.response?.status === 404) {
+                    setIsNewUser(true);
+                    setStep(2);
+                } else {
+                    setMessageType('error');
+                    setMessage(error.response?.data.message || 'Error sending OTP.');
+                }
             }
         } else if (step === 2) {
             if (isNewUser) {
                 if (!validatePassword(formData.password)) {
                     setMessageType('error');
-                    setMessage('Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one special character.');
+                    setMessage('Your password must be at least 8 characters long and include at least one uppercase letter (A-Z), one lowercase letter (a-z), and one special character.');
                     return;
                 }
 
                 try {
-                    const res = await axios.post('/register', {
+                    const res = await axios.post('/api/register', {
                         email: formData.email,
                         username: formData.username,
                         password: formData.password,
@@ -738,7 +744,7 @@ function LoginWithOTP() {
                 }
             } else {
                 try {
-                    const res = await axios.post('/verify-otp', {
+                    const res = await axios.post('/api/verify-otp', {
                         email: formData.email,
                         otp: formData.otp,
                     });
@@ -829,11 +835,7 @@ function LoginWithOTP() {
                         type="submit"
                     >
                         <h1 className="text-center text-white font-medium text-lg">
-                            {step === 1
-                                ? 'Send OTP'
-                                : isNewUser
-                                ? 'Register'
-                                : 'Verify OTP'}
+                            {step === 1 ? 'Send OTP' : isNewUser ? 'Register' : 'Verify OTP'}
                         </h1>
                     </button>
                 </form>
@@ -854,6 +856,7 @@ function LoginWithOTP() {
 }
 
 export default LoginWithOTP;
+
 
 
 
