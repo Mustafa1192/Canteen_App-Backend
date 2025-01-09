@@ -446,6 +446,202 @@
 
 
 ////////////////////////////////////////////////////////////////////////Working With Latest Reqiurements 
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
+
+// function LoginWithOTP() {
+//     const [formData, setFormData] = useState({ email: '', otp: '', username: '', password: '' });
+//     const [message, setMessage] = useState('');
+//     const [messageType, setMessageType] = useState('');
+//     const [step, setStep] = useState(1); // 1: Request OTP, 2: Verify OTP/Register
+//     const [isNewUser, setIsNewUser] = useState(false);
+//     const [resendTimer, setResendTimer] = useState(60);
+//     const [canResend, setCanResend] = useState(false);
+//     const navigate = useNavigate();
+
+//     useEffect(() => {
+//         if (resendTimer > 0) {
+//             const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+//             return () => clearTimeout(timer);
+//         } else {
+//             setCanResend(true);
+//         }
+//     }, [resendTimer]);
+
+//     const handleChange = (e) => {
+//         const { name, value } = e.target;
+//         setFormData({ ...formData, [name]: value });
+//     };
+
+//     const handleResend = async () => {
+//         try {
+//             const res = await axios.post('http://localhost:5000/resend-otp', { email: formData.email });
+//             setMessageType('success');
+//             setMessage(res.data.message);
+//             setResendTimer(60);
+//             setCanResend(false);
+//         } catch (error) {
+//             setMessageType('error');
+//             setMessage(error.response?.data.message || 'Error resending OTP.');
+//         }
+//     };
+
+//     const handleSubmit = async (e) => {
+//         e.preventDefault();
+//         if (step === 1) {
+//             try {
+//                 const res = await axios.post('http://localhost:5000/send-otp', { email: formData.email });
+//                 setMessageType('success');
+//                 setMessage(res.data.message);
+//                 setIsNewUser(false);
+//                 setStep(2);
+//                 setResendTimer(60);
+//                 setCanResend(false);
+//             } catch (error) {
+//                 if (error.response?.status === 404) {
+//                     setIsNewUser(true);
+//                     setStep(2);
+//                 } else {
+//                     setMessageType('error');
+//                     setMessage(error.response?.data.message || 'Error sending OTP.');
+//                 }
+//             }
+//         } else if (step === 2) {
+//             if (isNewUser) {
+//                 try {
+//                     const res = await axios.post('http://localhost:5000/register', {
+//                         email: formData.email,
+//                         username: formData.username,
+//                         password: formData.password,
+//                         otp: formData.otp,
+//                     });
+//                     setMessageType('success');
+//                     setMessage(res.data.message);
+//                     navigate('/home');
+//                 } catch (error) {
+//                     setMessageType('error');
+//                     setMessage(error.response?.data.message || 'Registration failed.');
+//                 }
+//             } else {
+//                 try {
+//                     const res = await axios.post('http://localhost:5000/verify-otp', {
+//                         email: formData.email,
+//                         otp: formData.otp,
+//                     });
+//                     setMessageType('success');
+//                     setMessage(res.data.message);
+//                     navigate('/home');
+//                 } catch (error) {
+//                     setMessageType('error');
+//                     setMessage(error.response?.data.message || 'Invalid OTP.');
+//                 }
+//             }
+//         }
+//     };
+
+//     return (
+//         <div className="w-full h-screen bg-[#FAF5FF] p-5">
+//             <div className="pt-16">
+//                 <h1 className="text-center text-3xl font-bold text-[#534E55]">
+//                     {step === 1 ? 'Login with OTP' : isNewUser ? 'Register' : 'Verify OTP'}
+//                 </h1>
+//                 <p className="text-center text-2xl text-[#808080] mt-4">
+//                     {step === 1
+//                         ? 'Access your account securely with OTP'
+//                         : isNewUser
+//                         ? 'Register to create an account'
+//                         : 'Enter OTP to verify'}
+//                 </p>
+//             </div>
+//             <div className="flex justify-center items-center">
+//                 <form className="mt-12 text-center w-full sm:w-96" onSubmit={handleSubmit}>
+//                     {step === 1 && (
+//                         <input
+//                             className="p-5 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                             placeholder="Enter your email"
+//                             type="email"
+//                             name="email"
+//                             value={formData.email}
+//                             onChange={handleChange}
+//                             required
+//                         />
+//                     )}
+//                     {step === 2 && (
+//                         <>
+//                             <input
+//                                 className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                 placeholder="Enter OTP"
+//                                 type="text"
+//                                 name="otp"
+//                                 value={formData.otp}
+//                                 onChange={handleChange}
+//                                 required
+//                             />
+//                             {isNewUser && (
+//                                 <>
+//                                     <input
+//                                         className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                         placeholder="Enter Username"
+//                                         type="text"
+//                                         name="username"
+//                                         value={formData.username}
+//                                         onChange={handleChange}
+//                                         required
+//                                     />
+//                                     <input
+//                                         className="p-5 mt-4 bg-[#FFFFFF] rounded-2xl w-full sm:w-96 drop-shadow-md"
+//                                         placeholder="Enter Password"
+//                                         type="password"
+//                                         name="password"
+//                                         value={formData.password}
+//                                         onChange={handleChange}
+//                                         required
+//                                     />
+//                                 </>
+//                             )}
+//                         </>
+//                     )}
+//                     {message && (
+//                         <p
+//                             className={`text-center mt-4 ${
+//                                 messageType === 'error' ? 'text-red-500' : 'text-green-500'
+//                             }`}
+//                         >
+//                             {message}
+//                         </p>
+//                     )}
+//                     <button
+//                         className="p-5 mt-8 bg-[#FE724C] rounded-2xl drop-shadow-md w-full sm:w-80"
+//                         type="submit"
+//                     >
+//                         <h1 className="text-center text-white font-medium text-lg">
+//                             {step === 1
+//                                 ? 'Send OTP'
+//                                 : isNewUser
+//                                 ? 'Register'
+//                                 : 'Verify OTP'}
+//                         </h1>
+//                     </button>
+//                 </form>
+//             </div>
+//             {step === 2 && (
+//                 <div className="mt-4 text-center">
+//                     <button
+//                         className="text-[#FE724C] underline"
+//                         onClick={handleResend}
+//                         disabled={!canResend}
+//                     >
+//                         Resend OTP {canResend ? '' : `(${resendTimer}s)`}
+//                     </button>
+//                 </div>
+//             )}
+//         </div>
+//     );
+// }
+
+// export default LoginWithOTP;
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -474,9 +670,18 @@ function LoginWithOTP() {
         setFormData({ ...formData, [name]: value });
     };
 
+    const validateEmail = (email) => {
+        return email.endsWith('@aiktc.ac.in');
+    };
+
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*])[A-Za-z\d!@#$%&*]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     const handleResend = async () => {
         try {
-            const res = await axios.post('http://localhost:5000/resend-otp', { email: formData.email });
+            const res = await axios.post('/resend-otp', { email: formData.email });
             setMessageType('success');
             setMessage(res.data.message);
             setResendTimer(60);
@@ -489,28 +694,36 @@ function LoginWithOTP() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (step === 1) {
+            if (!validateEmail(formData.email)) {
+                setMessageType('error');
+                setMessage('Please use an email ending with @aiktc.ac.in');
+                return;
+            }
+
             try {
-                const res = await axios.post('http://localhost:5000/send-otp', { email: formData.email });
+                const res = await axios.post('/send-otp', { email: formData.email });
                 setMessageType('success');
                 setMessage(res.data.message);
-                setIsNewUser(false);
+                setIsNewUser(res.data.isNewUser);
                 setStep(2);
                 setResendTimer(60);
                 setCanResend(false);
             } catch (error) {
-                if (error.response?.status === 404) {
-                    setIsNewUser(true);
-                    setStep(2);
-                } else {
-                    setMessageType('error');
-                    setMessage(error.response?.data.message || 'Error sending OTP.');
-                }
+                setMessageType('error');
+                setMessage(error.response?.data.message || 'Error sending OTP.');
             }
         } else if (step === 2) {
             if (isNewUser) {
+                if (!validatePassword(formData.password)) {
+                    setMessageType('error');
+                    setMessage('Your password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one special character.');
+                    return;
+                }
+
                 try {
-                    const res = await axios.post('http://localhost:5000/register', {
+                    const res = await axios.post('/register', {
                         email: formData.email,
                         username: formData.username,
                         password: formData.password,
@@ -525,7 +738,7 @@ function LoginWithOTP() {
                 }
             } else {
                 try {
-                    const res = await axios.post('http://localhost:5000/verify-otp', {
+                    const res = await axios.post('/verify-otp', {
                         email: formData.email,
                         otp: formData.otp,
                     });
@@ -641,7 +854,6 @@ function LoginWithOTP() {
 }
 
 export default LoginWithOTP;
-
 
 
 
